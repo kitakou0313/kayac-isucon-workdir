@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  kataribe:
+    build:
+      context: ./kataribe
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./kataribe/kataribe-config:/workdir
+      - ./kataribe/webserver-log:/logs
+
+  slowquery:
+    image: mysql:8.0
+    volumes:
+      - ./mysql-slowquery/mysql-slowquery-log:/var/log/slowquery-log
+
+  pprof:
+    build: 
+      context: ./pprof
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./pprof/profilefiles:/tmp/profile
+      - ./pprof/output:/tmp/output
+  
+  deploy-test:
+    build:
+      context: ./deploy-test
+      dockerfile: ./Dockerfile
+    ports:
+      - "2222:22"
