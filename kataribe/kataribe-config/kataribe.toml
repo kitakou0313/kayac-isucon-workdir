@@ -88,32 +88,23 @@ duration_index = 10
 # For overview of regexp syntax: https://golang.org/pkg/regexp/syntax/
 #
 [[bundle]]
-regexp = '^(GET|HEAD) /api/estate/[0-9]+'
-name = 'GET /api/estate/{id}'
-#
-[[bundle]]
-regexp = '^(GET|HEAD) /api/chair/[0-9]+'
-name = 'GET /api/chair/{id}'
+regexp = '^(GET|HEAD) /api/playlist/[0-9A-Z]+'
+name = 'GET /api/playlist/{id}'
 
 [[bundle]]
-regexp = '^(GET|HEAD) /api/estate/search?'
-name = 'GET /api/estate/search?'
+regexp = '^POST /api/playlist/[0-9A-Z]+/favorite'
+name = 'POST /api/playlist/{id}/favorite'
+
 
 [[bundle]]
-regexp = '^(GET|HEAD) /api/chair/search?'
-name = 'GET /api/chair/search?'
+regexp = '^POST /api/playlist/[0-9A-Z]+/update'
+name = 'POST /api/playlist/{id}/update'
+
 
 [[bundle]]
-regexp = '^POST /api/estate/req_doc/'
-name = 'POST /api/estate/req_doc/{id}'
+regexp = '^POST /api/playlist/[0-9A-Z]+/delete'
+name = 'POST /api/playlist/{id}/delete'
 
-[[bundle]]
-regexp = '^POST /api/chair/buy/'
-name = 'POST /api/chair/buy/{id}'
-
-[[bundle]]
-regexp = '^GET /api/recommended_estate/'
-name = 'GET /api/recommended_estate/{id}'
 
 #[[bundle]]
 #regexp = '^(GET|HEAD) /images/'
