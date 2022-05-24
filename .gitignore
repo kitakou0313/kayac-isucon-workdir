@@ -4,3 +4,4 @@ deploy-test/id_rsa/id_rsa
 deploy-test/id_rsa/id_rsa.pub
 
 hosts/hosts.txt
+webapp/sql/90_isucon_listen80_dump.sql
