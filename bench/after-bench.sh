@@ -30,5 +30,7 @@ echo "Start to fetch log file from localhost"
 
 rsync -e -av /home/kitakou/kayac-isucon/code/kayac-isucon-2022-main/webapp/nginx/log/access.log ./kataribe/webserver-log/access.log
 rsync -e -av /home/kitakou/kayac-isucon/code/kayac-isucon-2022-main/webapp/mysql/logs/mysql-slow.log ./mysql-slowquery/mysql-slowquery-log/mysql-slow.log
+rsync -e -av /home/kitakou/kayac-isucon/code/kayac-isucon-2022-main/webapp/golang/isucon ./pprof/profilefiles/isucon
+rsync -e -av /home/kitakou/kayac-isucon/code/kayac-isucon-2022-main/webapp/golang/cpu.pprof ./pprof/profilefiles/cpu.pprof
 
 echo "Finish to fetch log files"
