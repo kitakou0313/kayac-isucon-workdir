@@ -9,7 +9,9 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"os/signal"
 	"regexp"
+	"syscall"
 	"time"
 	"unicode/utf8"
 
@@ -20,6 +22,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 	"github.com/oklog/ulid/v2"
+	"github.com/pkg/profile"
 	"github.com/srinathgs/mysqlstore"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -77,6 +80,7 @@ func cacheControllPrivate(next echo.HandlerFunc) echo.HandlerFunc {
 }
 
 func main() {
+	p := profile.Start(profile.ProfilePath("/etc/pprof"))
 	e := echo.New()
 	e.Debug = true
 	e.Logger.SetLevel(log.DEBUG)
@@ -128,6 +132,22 @@ func main() {
 	e.Logger.Infof("starting listen80 server on : %s ...", port)
 	serverPort := fmt.Sprintf(":%s", port)
 	e.Logger.Fatal(e.Start(serverPort))
+
+	go func() {
+		if err := e.Start(serverPort); err != nil && err != http.ErrServerClosed {
+			e.Logger.Fatal("shutting down the server", err)
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGTERM)
+	<-quit
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	p.Stop()
+	defer cancel()
+	if err := e.Shutdown(ctx); err != nil {
+		e.Logger.Fatal(err)
+	}
 }
 
 func getSession(r *http.Request) (*sessions.Session, error) {
