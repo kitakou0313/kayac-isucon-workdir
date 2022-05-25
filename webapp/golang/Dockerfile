@@ -1,7 +1,11 @@
 FROM golang:1.18.1-bullseye
+
+WORKDIR /app
+
 RUN apt-get update && apt-get -y upgrade
-RUN mkdir -p /home/isucon
-COPY . /home/isucon/webapp
-WORKDIR /home/isucon/webapp
-RUN go build -o isucon ./... 
-CMD ["./isucon"]
+
+COPY go.mod ./
+COPY go.sum ./
+RUN go mod download
+
+CMD ["bash", "-c", "go build -o isucon ./... && ./isucon"]
