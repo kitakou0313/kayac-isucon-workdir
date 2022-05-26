@@ -80,7 +80,6 @@ func cacheControllPrivate(next echo.HandlerFunc) echo.HandlerFunc {
 }
 
 func main() {
-	p := profile.Start(profile.ProfilePath("/etc/pprof"))
 	e := echo.New()
 	e.Debug = true
 	e.Logger.SetLevel(log.DEBUG)
@@ -110,6 +109,10 @@ func main() {
 	e.POST("/api/playlist/:playlistUlid/delete", apiPlaylistDeleteHandler)
 	e.POST("/api/playlist/:playlistUlid/favorite", apiPlaylistFavoriteHandler)
 	e.POST("/api/admin/user/ban", apiAdminUserBanHandler)
+
+	// bench endpoint
+	e.GET("/api/bench/start", benchStartHandler)
+	e.GET("/api/bench/stop", benchStopHandler)
 
 	e.POST("/initialize", initializeHandler)
 
@@ -1671,6 +1674,23 @@ func apiPlaylistFavoriteHandler(c echo.Context) error {
 	}
 
 	return nil
+}
+
+var p interface{ Stop() }
+
+// for bench start
+func benchStartHandler(c echo.Context) error {
+	p = profile.Start(profile.ProfilePath("/etc/pprof"))
+	return c.String(
+		http.StatusOK, "Bench start",
+	)
+}
+
+func benchStopHandler(c echo.Context) error {
+	p.Stop()
+	return c.String(
+		http.StatusOK, "Bench stop",
+	)
 }
 
 // POST /api/admin/user/ban
