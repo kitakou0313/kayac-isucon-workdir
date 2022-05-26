@@ -25,5 +25,6 @@ echo "Start to clean logs in remote hosts"
 cat /dev/null > /home/kitakou/kayac-isucon/code/kayac-isucon-2022-main/webapp/nginx/log/access.log
 cat /dev/null > /home/kitakou/kayac-isucon/code/kayac-isucon-2022-main/webapp/mysql/logs/mysql-slow.log
 
+curl http://localhost/api/bench/start
 
 echo "Finish to backup log and clean log"
