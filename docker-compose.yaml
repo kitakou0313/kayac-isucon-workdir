@@ -21,8 +21,6 @@ services:
     volumes:
       - ./pprof/profilefiles:/tmp/profile
       - ./pprof/output:/tmp/output
-    ports:
-      - 22222:6666
   
   deploy-test:
     build:
