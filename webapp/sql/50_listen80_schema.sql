@@ -20,6 +20,7 @@ CREATE TABLE `song` (
   `is_public` TINYINT(2) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE INDEX ulid_index ON isucon_listen80.song (ulid);
 
 CREATE TABLE `artist` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
@@ -38,7 +39,6 @@ CREATE TABLE `playlist` (
   `updated_at` TIMESTAMP(3) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 CREATE INDEX ulid_index ON isucon_listen80.playlist (ulid);
 
 CREATE TABLE `playlist_song` (
@@ -47,6 +47,7 @@ CREATE TABLE `playlist_song` (
   `song_id` BIGINT NOT NULL,
   PRIMARY KEY (`playlist_id`, `sort_order`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE INDEX playlist_id_idx ON isucon_listen80.playlist_song (playlist_id);
 
 CREATE TABLE `playlist_favorite` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
@@ -56,6 +57,10 @@ CREATE TABLE `playlist_favorite` (
   PRIMARY KEY (`id`),
   UNIQUE `uniq_playlist_id_favorite_user_account` (`playlist_id`, `favorite_user_account`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE INDEX playlist_id_idx ON isucon_listen80.playlist_favorite (playlist_id);
+CREATE INDEX playlist_id_user_acc_idx ON isucon_listen80.playlist_favorite (playlist_id,favorite_user_account);
+
+
 
 CREATE TABLE IF NOT EXISTS `sessions` (
   `session_id` varchar(128) COLLATE utf8mb4_bin NOT NULL,
