@@ -713,37 +713,78 @@ func getPlaylistDetailByPlaylistULID(ctx context.Context, db connOrTx, playlistU
 		)
 	}
 
-	songs := make([]Song, 0, len(resPlaylistSongs))
+	// Playlistに対応した曲の取得
+	playListSongIDs := make([]int, 0, len(resPlaylistSongs))
 	for _, row := range resPlaylistSongs {
-		var song SongRow
-		if err := db.GetContext(
-			ctx,
-			&song,
-			"SELECT * FROM song WHERE id = ?",
-			row.SongID,
-		); err != nil {
-			return nil, fmt.Errorf("error Get song by id=%d: %w", row.SongID, err)
-		}
-
-		var artist ArtistRow
-		if err := db.GetContext(
-			ctx,
-			&artist,
-			"SELECT * FROM artist WHERE id = ?",
-			song.ArtistID,
-		); err != nil {
-			return nil, fmt.Errorf("error Get artist by id=%d: %w", song.ArtistID, err)
-		}
-
-		songs = append(songs, Song{
-			ULID:        song.ULID,
-			Title:       song.Title,
-			Artist:      artist.Name,
-			Album:       song.Album,
-			TrackNumber: song.TrackNumber,
-			IsPublic:    song.IsPublic,
-		})
+		playListSongIDs = append(playListSongIDs, row.SongID)
 	}
+
+	songs := make([]Song, 0, len(resPlaylistSongs))
+
+	if len(resPlaylistSongs) != 0 {
+		songWithArtistName := make([]SongArtistRow, 0, len(resPlaylistSongs))
+		query := "select song.ulid, song.title, song.album, song.track_number, song.is_public, artist.name from song inner join artist on song.id in (?) and song.artist_id=artist.id"
+		query, param, err := sqlx.In(query, playListSongIDs)
+		if err != nil {
+			return nil, fmt.Errorf(
+				"error in making IN query: %w",
+				err,
+			)
+		}
+		if err := db.SelectContext(
+			ctx,
+			&songWithArtistName,
+			query,
+			param...,
+		); err != nil {
+			return nil, fmt.Errorf(
+				"error Select playlist_song by playlist_id=%d: %w",
+				playlist.ID, err,
+			)
+		}
+		for _, row := range songWithArtistName {
+			songs = append(songs, Song{
+				ULID:        row.ULID,
+				Title:       row.Title,
+				Artist:      row.ArtistName,
+				Album:       row.Album,
+				TrackNumber: row.TrackNumber,
+				IsPublic:    row.IsPublic,
+			})
+		}
+	}
+
+	// N+1
+	// for _, row := range resPlaylistSongs {
+	// 	var song SongRow
+	// 	if err := db.GetContext(
+	// 		ctx,
+	// 		&song,
+	// 		"SELECT * FROM song WHERE id = ?",
+	// 		row.SongID,
+	// 	); err != nil {
+	// 		return nil, fmt.Errorf("error Get song by id=%d: %w", row.SongID, err)
+	// 	}
+
+	// 	var artist ArtistRow
+	// 	if err := db.GetContext(
+	// 		ctx,
+	// 		&artist,
+	// 		"SELECT * FROM artist WHERE id = ?",
+	// 		song.ArtistID,
+	// 	); err != nil {
+	// 		return nil, fmt.Errorf("error Get artist by id=%d: %w", song.ArtistID, err)
+	// 	}
+
+	// 	songs = append(songs, Song{
+	// 		ULID:        song.ULID,
+	// 		Title:       song.Title,
+	// 		Artist:      artist.Name,
+	// 		Album:       song.Album,
+	// 		TrackNumber: song.TrackNumber,
+	// 		IsPublic:    song.IsPublic,
+	// 	})
+	// }
 
 	return &PlaylistDetail{
 		Playlist: &Playlist{

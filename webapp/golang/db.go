@@ -21,6 +21,15 @@ type SongRow struct {
 	IsPublic    bool   `db:"is_public"`
 }
 
+type SongArtistRow struct {
+	ULID        string `db:"ulid"`
+	Title       string `db:"title"`
+	Album       string `db:"album"`
+	TrackNumber int    `db:"track_number"`
+	IsPublic    bool   `db:"is_public"`
+	ArtistName  string `db:"name"`
+}
+
 type ArtistRow struct {
 	ID   int    `db:"id"`
 	ULID string `db:"ulid"`
