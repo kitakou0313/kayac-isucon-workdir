@@ -59,6 +59,7 @@ CREATE TABLE `playlist_favorite` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE INDEX playlist_id_idx ON isucon_listen80.playlist_favorite (playlist_id);
 CREATE INDEX playlist_id_user_acc_idx ON isucon_listen80.playlist_favorite (playlist_id,favorite_user_account);
+CREATE INDEX user_acc__created_idx ON isucon_listen80.playlist_favorite (favorite_user_account, created_at);
 
 
 
