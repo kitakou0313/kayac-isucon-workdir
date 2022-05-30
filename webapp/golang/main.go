@@ -359,6 +359,30 @@ func getSongByULID(ctx context.Context, db connOrTx, songULID string) (*SongRow,
 	return &row, nil
 }
 
+// N+1改善用
+func getSongListByULIDs(ctx context.Context, db connOrTx, songULIDs []string) ([]*SongRow, error) {
+	var songRows []*SongRow
+
+	querySong := "SELECT * FROM song WHERE `ulid` IN (?)"
+	querySong, paramSong, err := sqlx.In(querySong, songULIDs)
+	if err != nil {
+		return nil, fmt.Errorf("error Get song by ulid=%s: %w", songULIDs, err)
+	}
+
+	if err := db.SelectContext(
+		ctx,
+		&songRows,
+		querySong,
+		paramSong...,
+	); err != nil {
+		return nil, fmt.Errorf(
+			"error Select songs with ULIDS : %w",
+			err,
+		)
+	}
+	return songRows, nil
+}
+
 func isFavoritedBy(ctx context.Context, db connOrTx, userAccount string, playlistID int) (bool, error) {
 	var count int
 	if err := db.GetContext(
@@ -851,6 +875,31 @@ func insertPlaylistSong(ctx context.Context, db connOrTx, playlistID, sortOrder,
 		return fmt.Errorf(
 			"error Insert playlist_song by playlist_id=%d, sort_order=%d, song_id=%d: %w",
 			playlistID, sortOrder, songID, err,
+		)
+	}
+	return nil
+}
+
+// N+1改善用 bulk insert
+func bulkInsertPlaylistSong(ctx context.Context, db connOrTx, playlistID int, songIDList []int) error {
+	valueList := make([]interface{}, 0, len(songIDList)*3)
+	queryValueString := ""
+
+	for sortOrder, songId := range songIDList {
+		valueList = append(valueList, playlistID, sortOrder, songId)
+		queryValueString = " (?, ?, ?),"
+	}
+
+	queryValueString = queryValueString[:len(queryValueString)-1]
+
+	if _, err := db.ExecContext(
+		ctx,
+		"INSERT INTO playlist_song (`playlist_id`, `sort_order`, `song_id`) VALUES"+queryValueString,
+		valueList...,
+	); err != nil {
+		return fmt.Errorf(
+			"error Insert playlist_song by playlist_id=%d, %w",
+			playlistID, err,
 		)
 	}
 	return nil
@@ -1472,24 +1521,51 @@ func apiPlaylistUpdateHandler(c echo.Context) error {
 		return errorResponse(c, 500, "internal server error")
 	}
 
-	for i, songULID := range songULIDs {
-		song, err := getSongByULID(ctx, tx, songULID)
+	if len(songULIDs) != 0 {
+		songRows, err := getSongListByULIDs(ctx, tx, songULIDs)
 		if err != nil {
 			tx.Rollback()
-			c.Logger().Errorf("error getSongByULID: %s", err)
+			c.Logger().Errorf("error getSongListByULIDs: %s", err)
 			return errorResponse(c, 500, "internal server error")
 		}
-		if song == nil {
-			tx.Rollback()
-			return errorResponse(c, 400, fmt.Sprintf("song not found. ulid: %s", songULID))
+
+		// sort orderをそろえるための処理
+		songIDList := make([]int, 0, len(songULIDs))
+		for _, songULID := range songULIDs {
+			for _, songRow := range songRows {
+				if songULID == songRow.ULID {
+					songIDList = append(songIDList, songRow.ID)
+				}
+			}
 		}
 
-		if err := insertPlaylistSong(ctx, tx, playlist.ID, i+1, song.ID); err != nil {
+		if err := bulkInsertPlaylistSong(ctx, tx, playlist.ID, songIDList); err != nil {
 			tx.Rollback()
 			c.Logger().Errorf("error insertPlaylistSong: %s", err)
 			return errorResponse(c, 500, "internal server error")
 		}
 	}
+
+	// // N+1
+	// for i, songULID := range songULIDs {
+	// 	song, err := getSongByULID(ctx, tx, songULID)
+	// 	if err != nil {
+	// 		tx.Rollback()
+	// 		c.Logger().Errorf("error getSongByULID: %s", err)
+	// 		return errorResponse(c, 500, "internal server error")
+	// 	}
+	// 	if song == nil {
+	// 		tx.Rollback()
+	// 		return errorResponse(c, 400, fmt.Sprintf("song not found. ulid: %s", songULID))
+	// 	}
+
+	// 	if err := insertPlaylistSong(ctx, tx, playlist.ID, i+1, song.ID); err != nil {
+	// 		tx.Rollback()
+	// 		c.Logger().Errorf("error insertPlaylistSong: %s", err)
+	// 		return errorResponse(c, 500, "internal server error")
+	// 	}
+	// }
+	// // N+1 ここまで
 
 	if err := tx.Commit(); err != nil {
 		c.Logger().Errorf("error tx.Commit: %s", err)
