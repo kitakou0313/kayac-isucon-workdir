@@ -887,7 +887,7 @@ func bulkInsertPlaylistSong(ctx context.Context, db connOrTx, playlistID int, so
 
 	for sortOrder, songId := range songIDList {
 		valueList = append(valueList, playlistID, sortOrder, songId)
-		queryValueString = " (?, ?, ?),"
+		queryValueString = queryValueString + " (?, ?, ?),"
 	}
 
 	queryValueString = queryValueString[:len(queryValueString)-1]
