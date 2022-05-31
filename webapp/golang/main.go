@@ -122,7 +122,7 @@ func main() {
 		e.Logger.Fatalf("failed to connect db: %v", err)
 		return
 	}
-	db.SetMaxOpenConns(10)
+	db.SetMaxOpenConns(25)
 	defer db.Close()
 
 	sessionStore, err = mysqlstore.NewMySQLStoreFromConnection(db.DB, "sessions_golang", "/", 86400, []byte("powawa"))
@@ -643,6 +643,7 @@ func getFavoritedPlaylistSummariesByUserAccount(ctx context.Context, db connOrTx
 	}
 
 	playlists := make([]Playlist, 0, 100)
+	// N+1
 	for _, fav := range playlistFavorites {
 		playlist, err := getPlaylistByID(ctx, db, fav.PlaylistID)
 		if err != nil {
