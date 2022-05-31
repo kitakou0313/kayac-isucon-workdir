@@ -1,133 +1,133 @@
 Top 20 Sort By Count
 Count   Total     Mean   Stddev     Min   P50.0   P90.0   P95.0   P99.0     Max  2xx  3xx  4xx  5xx  TotalBytes   MinBytes  MeanBytes   MaxBytes  Request
-  297  80.890   0.2724   0.0452   0.095   0.275   0.326   0.339   0.360   0.400  292    0    5    0     2963114          0       9976      20581  GET /api/playlist/{id}
-  279  81.916   0.2936   0.0413   0.101   0.295   0.345   0.355   0.400   0.407  276    0    3    0     2826726          0      10131      20602  POST /api/playlist/{id}/favorite
-   45   1.321   0.0294   0.0520   0.006   0.012   0.060   0.123   0.300   0.300   26    0   19    0        2584         38         57         84  POST /api/login HTTP/1.1
-   39  29.497   0.7563   0.1479   0.524   0.730   1.004   1.102   1.104   1.104   39    0    0    0     1544517      39552      39603      39622  GET /api/recent_playlists HTTP/1.1
-   39  52.843   1.3549   0.3888   0.011   1.489   1.645   1.754   1.806   1.806   37    0    2    0      260937         68       6690      45313  GET /api/playlists HTTP/1.1
-   13  29.840   2.2954   0.9080   0.666   2.437   3.367   3.621   3.621   3.621   11    0    2    0      102502          0       7884      16643  POST /api/playlist/{id}/update
-   13   1.781   0.1370   0.3775   0.004   0.007   0.205   1.432   1.432   1.432   13    0    0    0        1131         87         87         87  POST /api/playlist/add HTTP/1.1
-   11  16.733   1.5212   0.1895   1.060   1.525   1.679   1.869   1.869   1.869   11    0    0    0      437527      39764      39775      39784  GET /api/popular_playlists HTTP/1.1
-    2   0.088   0.0440   0.0000   0.044   0.044   0.044   0.044   0.044   0.044    2    0    0    0         375        187        187        188  POST /api/admin/user/ban HTTP/1.1
-    2   0.274   0.1370   0.0010   0.136   0.138   0.138   0.138   0.138   0.138    2    0    0    0          76         38         38         38  POST /api/signup HTTP/1.1
-    1   0.000   0.0000   0.0000   0.000   0.000   0.000   0.000   0.000   0.000    1    0    0    0        1165       1165       1165       1165  GET / HTTP/1.1
-    1   0.261   0.2610   0.0000   0.261   0.261   0.261   0.261   0.261   0.261    1    0    0    0          38         38         38         38  POST /api/playlist/{id}/delete
-    1   0.003   0.0030   0.0000   0.003   0.003   0.003   0.003   0.003   0.003    1    0    0    0          11         11         11         11  GET /api/bench/start HTTP/1.1
+  285  82.469   0.2894   0.0447   0.168   0.287   0.351   0.357   0.401   0.438  284    0    1    0     2804587          0       9840      20446  POST /api/playlist/{id}/favorite
+  260  68.561   0.2637   0.0488   0.075   0.270   0.319   0.339   0.369   0.375  256    0    4    0     2526453          0       9717      20603  GET /api/playlist/{id}
+   50  67.511   1.3502   0.3752   0.017   1.443   1.660   1.687   1.700   1.700   47    0    3    0       83284          0       1665      15470  GET /api/playlists HTTP/1.1
+   50   1.716   0.0343   0.0475   0.006   0.014   0.088   0.136   0.262   0.262   31    0   19    0        2774         38         55         84  POST /api/login HTTP/1.1
+   44  35.039   0.7963   0.2457   0.522   0.723   1.210   1.422   1.471   1.471   41    0    3    0     1624269          0      36915      39664  GET /api/recent_playlists HTTP/1.1
+   17   4.379   0.2576   0.5617   0.005   0.006   1.162   2.159   2.159   2.159   17    0    0    0        1479         87         87         87  POST /api/playlist/add HTTP/1.1
+   15  24.454   1.6303   1.0696   0.036   1.490   2.982   4.067   4.067   4.067   14    0    1    0       81759          0       5450      18943  POST /api/playlist/{id}/update
+   14  19.663   1.4045   0.4015   0.112   1.480   1.695   1.852   1.852   1.852   13    0    1    0      517064          0      36933      39782  GET /api/popular_playlists HTTP/1.1
+    2   0.056   0.0280   0.0200   0.008   0.048   0.048   0.048   0.048   0.048    2    0    0    0         387        193        193        194  POST /api/admin/user/ban HTTP/1.1
+    2   0.288   0.1440   0.0130   0.131   0.157   0.157   0.157   0.157   0.157    2    0    0    0          76         38         38         38  POST /api/signup HTTP/1.1
+    1   0.007   0.0070   0.0000   0.007   0.007   0.007   0.007   0.007   0.007    1    0    0    0          38         38         38         38  POST /api/logout HTTP/1.1
+    1   0.298   0.2980   0.0000   0.298   0.298   0.298   0.298   0.298   0.298    1    0    0    0          38         38         38         38  POST /api/playlist/{id}/delete
+    1   0.001   0.0010   0.0000   0.001   0.001   0.001   0.001   0.001   0.001    1    0    0    0          11         11         11         11  GET /api/bench/start HTTP/1.1
     1   0.009   0.0090   0.0000   0.009   0.009   0.009   0.009   0.009   0.009    1    0    0    0          10         10         10         10  GET /api/bench/stop HTTP/1.1
-    1   0.009   0.0090   0.0000   0.009   0.009   0.009   0.009   0.009   0.009    1    0    0    0          38         38         38         38  POST /api/logout HTTP/1.1
-    1  12.781  12.7810   0.0000  12.781  12.781  12.781  12.781  12.781  12.781    1    0    0    0          38         38         38         38  POST /initialize HTTP/1.1
+    1  13.260  13.2600   0.0000  13.260  13.260  13.260  13.260  13.260  13.260    1    0    0    0          38         38         38         38  POST /initialize HTTP/1.1
+    1   0.000   0.0000   0.0000   0.000   0.000   0.000   0.000   0.000   0.000    1    0    0    0        1165       1165       1165       1165  GET / HTTP/1.1
 
 Top 20 Sort By Total
 Count   Total     Mean   Stddev     Min   P50.0   P90.0   P95.0   P99.0     Max  2xx  3xx  4xx  5xx  TotalBytes   MinBytes  MeanBytes   MaxBytes  Request
-  279  81.916   0.2936   0.0413   0.101   0.295   0.345   0.355   0.400   0.407  276    0    3    0     2826726          0      10131      20602  POST /api/playlist/{id}/favorite
-  297  80.890   0.2724   0.0452   0.095   0.275   0.326   0.339   0.360   0.400  292    0    5    0     2963114          0       9976      20581  GET /api/playlist/{id}
-   39  52.843   1.3549   0.3888   0.011   1.489   1.645   1.754   1.806   1.806   37    0    2    0      260937         68       6690      45313  GET /api/playlists HTTP/1.1
-   13  29.840   2.2954   0.9080   0.666   2.437   3.367   3.621   3.621   3.621   11    0    2    0      102502          0       7884      16643  POST /api/playlist/{id}/update
-   39  29.497   0.7563   0.1479   0.524   0.730   1.004   1.102   1.104   1.104   39    0    0    0     1544517      39552      39603      39622  GET /api/recent_playlists HTTP/1.1
-   11  16.733   1.5212   0.1895   1.060   1.525   1.679   1.869   1.869   1.869   11    0    0    0      437527      39764      39775      39784  GET /api/popular_playlists HTTP/1.1
-    1  12.781  12.7810   0.0000  12.781  12.781  12.781  12.781  12.781  12.781    1    0    0    0          38         38         38         38  POST /initialize HTTP/1.1
-   13   1.781   0.1370   0.3775   0.004   0.007   0.205   1.432   1.432   1.432   13    0    0    0        1131         87         87         87  POST /api/playlist/add HTTP/1.1
-   45   1.321   0.0294   0.0520   0.006   0.012   0.060   0.123   0.300   0.300   26    0   19    0        2584         38         57         84  POST /api/login HTTP/1.1
-    2   0.274   0.1370   0.0010   0.136   0.138   0.138   0.138   0.138   0.138    2    0    0    0          76         38         38         38  POST /api/signup HTTP/1.1
-    1   0.261   0.2610   0.0000   0.261   0.261   0.261   0.261   0.261   0.261    1    0    0    0          38         38         38         38  POST /api/playlist/{id}/delete
-    2   0.088   0.0440   0.0000   0.044   0.044   0.044   0.044   0.044   0.044    2    0    0    0         375        187        187        188  POST /api/admin/user/ban HTTP/1.1
+  285  82.469   0.2894   0.0447   0.168   0.287   0.351   0.357   0.401   0.438  284    0    1    0     2804587          0       9840      20446  POST /api/playlist/{id}/favorite
+  260  68.561   0.2637   0.0488   0.075   0.270   0.319   0.339   0.369   0.375  256    0    4    0     2526453          0       9717      20603  GET /api/playlist/{id}
+   50  67.511   1.3502   0.3752   0.017   1.443   1.660   1.687   1.700   1.700   47    0    3    0       83284          0       1665      15470  GET /api/playlists HTTP/1.1
+   44  35.039   0.7963   0.2457   0.522   0.723   1.210   1.422   1.471   1.471   41    0    3    0     1624269          0      36915      39664  GET /api/recent_playlists HTTP/1.1
+   15  24.454   1.6303   1.0696   0.036   1.490   2.982   4.067   4.067   4.067   14    0    1    0       81759          0       5450      18943  POST /api/playlist/{id}/update
+   14  19.663   1.4045   0.4015   0.112   1.480   1.695   1.852   1.852   1.852   13    0    1    0      517064          0      36933      39782  GET /api/popular_playlists HTTP/1.1
+    1  13.260  13.2600   0.0000  13.260  13.260  13.260  13.260  13.260  13.260    1    0    0    0          38         38         38         38  POST /initialize HTTP/1.1
+   17   4.379   0.2576   0.5617   0.005   0.006   1.162   2.159   2.159   2.159   17    0    0    0        1479         87         87         87  POST /api/playlist/add HTTP/1.1
+   50   1.716   0.0343   0.0475   0.006   0.014   0.088   0.136   0.262   0.262   31    0   19    0        2774         38         55         84  POST /api/login HTTP/1.1
+    1   0.298   0.2980   0.0000   0.298   0.298   0.298   0.298   0.298   0.298    1    0    0    0          38         38         38         38  POST /api/playlist/{id}/delete
+    2   0.288   0.1440   0.0130   0.131   0.157   0.157   0.157   0.157   0.157    2    0    0    0          76         38         38         38  POST /api/signup HTTP/1.1
+    2   0.056   0.0280   0.0200   0.008   0.048   0.048   0.048   0.048   0.048    2    0    0    0         387        193        193        194  POST /api/admin/user/ban HTTP/1.1
     1   0.009   0.0090   0.0000   0.009   0.009   0.009   0.009   0.009   0.009    1    0    0    0          10         10         10         10  GET /api/bench/stop HTTP/1.1
-    1   0.009   0.0090   0.0000   0.009   0.009   0.009   0.009   0.009   0.009    1    0    0    0          38         38         38         38  POST /api/logout HTTP/1.1
-    1   0.003   0.0030   0.0000   0.003   0.003   0.003   0.003   0.003   0.003    1    0    0    0          11         11         11         11  GET /api/bench/start HTTP/1.1
+    1   0.007   0.0070   0.0000   0.007   0.007   0.007   0.007   0.007   0.007    1    0    0    0          38         38         38         38  POST /api/logout HTTP/1.1
+    1   0.001   0.0010   0.0000   0.001   0.001   0.001   0.001   0.001   0.001    1    0    0    0          11         11         11         11  GET /api/bench/start HTTP/1.1
     1   0.000   0.0000   0.0000   0.000   0.000   0.000   0.000   0.000   0.000    1    0    0    0        1165       1165       1165       1165  GET / HTTP/1.1
 
 Top 20 Sort By Mean
 Count   Total     Mean   Stddev     Min   P50.0   P90.0   P95.0   P99.0     Max  2xx  3xx  4xx  5xx  TotalBytes   MinBytes  MeanBytes   MaxBytes  Request
-    1  12.781  12.7810   0.0000  12.781  12.781  12.781  12.781  12.781  12.781    1    0    0    0          38         38         38         38  POST /initialize HTTP/1.1
-   13  29.840   2.2954   0.9080   0.666   2.437   3.367   3.621   3.621   3.621   11    0    2    0      102502          0       7884      16643  POST /api/playlist/{id}/update
-   11  16.733   1.5212   0.1895   1.060   1.525   1.679   1.869   1.869   1.869   11    0    0    0      437527      39764      39775      39784  GET /api/popular_playlists HTTP/1.1
-   39  52.843   1.3549   0.3888   0.011   1.489   1.645   1.754   1.806   1.806   37    0    2    0      260937         68       6690      45313  GET /api/playlists HTTP/1.1
-   39  29.497   0.7563   0.1479   0.524   0.730   1.004   1.102   1.104   1.104   39    0    0    0     1544517      39552      39603      39622  GET /api/recent_playlists HTTP/1.1
-  279  81.916   0.2936   0.0413   0.101   0.295   0.345   0.355   0.400   0.407  276    0    3    0     2826726          0      10131      20602  POST /api/playlist/{id}/favorite
-  297  80.890   0.2724   0.0452   0.095   0.275   0.326   0.339   0.360   0.400  292    0    5    0     2963114          0       9976      20581  GET /api/playlist/{id}
-    1   0.261   0.2610   0.0000   0.261   0.261   0.261   0.261   0.261   0.261    1    0    0    0          38         38         38         38  POST /api/playlist/{id}/delete
-    2   0.274   0.1370   0.0010   0.136   0.138   0.138   0.138   0.138   0.138    2    0    0    0          76         38         38         38  POST /api/signup HTTP/1.1
-   13   1.781   0.1370   0.3775   0.004   0.007   0.205   1.432   1.432   1.432   13    0    0    0        1131         87         87         87  POST /api/playlist/add HTTP/1.1
-    2   0.088   0.0440   0.0000   0.044   0.044   0.044   0.044   0.044   0.044    2    0    0    0         375        187        187        188  POST /api/admin/user/ban HTTP/1.1
-   45   1.321   0.0294   0.0520   0.006   0.012   0.060   0.123   0.300   0.300   26    0   19    0        2584         38         57         84  POST /api/login HTTP/1.1
+    1  13.260  13.2600   0.0000  13.260  13.260  13.260  13.260  13.260  13.260    1    0    0    0          38         38         38         38  POST /initialize HTTP/1.1
+   15  24.454   1.6303   1.0696   0.036   1.490   2.982   4.067   4.067   4.067   14    0    1    0       81759          0       5450      18943  POST /api/playlist/{id}/update
+   14  19.663   1.4045   0.4015   0.112   1.480   1.695   1.852   1.852   1.852   13    0    1    0      517064          0      36933      39782  GET /api/popular_playlists HTTP/1.1
+   50  67.511   1.3502   0.3752   0.017   1.443   1.660   1.687   1.700   1.700   47    0    3    0       83284          0       1665      15470  GET /api/playlists HTTP/1.1
+   44  35.039   0.7963   0.2457   0.522   0.723   1.210   1.422   1.471   1.471   41    0    3    0     1624269          0      36915      39664  GET /api/recent_playlists HTTP/1.1
+    1   0.298   0.2980   0.0000   0.298   0.298   0.298   0.298   0.298   0.298    1    0    0    0          38         38         38         38  POST /api/playlist/{id}/delete
+  285  82.469   0.2894   0.0447   0.168   0.287   0.351   0.357   0.401   0.438  284    0    1    0     2804587          0       9840      20446  POST /api/playlist/{id}/favorite
+  260  68.561   0.2637   0.0488   0.075   0.270   0.319   0.339   0.369   0.375  256    0    4    0     2526453          0       9717      20603  GET /api/playlist/{id}
+   17   4.379   0.2576   0.5617   0.005   0.006   1.162   2.159   2.159   2.159   17    0    0    0        1479         87         87         87  POST /api/playlist/add HTTP/1.1
+    2   0.288   0.1440   0.0130   0.131   0.157   0.157   0.157   0.157   0.157    2    0    0    0          76         38         38         38  POST /api/signup HTTP/1.1
+   50   1.716   0.0343   0.0475   0.006   0.014   0.088   0.136   0.262   0.262   31    0   19    0        2774         38         55         84  POST /api/login HTTP/1.1
+    2   0.056   0.0280   0.0200   0.008   0.048   0.048   0.048   0.048   0.048    2    0    0    0         387        193        193        194  POST /api/admin/user/ban HTTP/1.1
     1   0.009   0.0090   0.0000   0.009   0.009   0.009   0.009   0.009   0.009    1    0    0    0          10         10         10         10  GET /api/bench/stop HTTP/1.1
-    1   0.009   0.0090   0.0000   0.009   0.009   0.009   0.009   0.009   0.009    1    0    0    0          38         38         38         38  POST /api/logout HTTP/1.1
-    1   0.003   0.0030   0.0000   0.003   0.003   0.003   0.003   0.003   0.003    1    0    0    0          11         11         11         11  GET /api/bench/start HTTP/1.1
+    1   0.007   0.0070   0.0000   0.007   0.007   0.007   0.007   0.007   0.007    1    0    0    0          38         38         38         38  POST /api/logout HTTP/1.1
+    1   0.001   0.0010   0.0000   0.001   0.001   0.001   0.001   0.001   0.001    1    0    0    0          11         11         11         11  GET /api/bench/start HTTP/1.1
     1   0.000   0.0000   0.0000   0.000   0.000   0.000   0.000   0.000   0.000    1    0    0    0        1165       1165       1165       1165  GET / HTTP/1.1
 
 Top 20 Sort By Standard Deviation
 Count   Total     Mean   Stddev     Min   P50.0   P90.0   P95.0   P99.0     Max  2xx  3xx  4xx  5xx  TotalBytes   MinBytes  MeanBytes   MaxBytes  Request
-   13  29.840   2.2954   0.9080   0.666   2.437   3.367   3.621   3.621   3.621   11    0    2    0      102502          0       7884      16643  POST /api/playlist/{id}/update
-   39  52.843   1.3549   0.3888   0.011   1.489   1.645   1.754   1.806   1.806   37    0    2    0      260937         68       6690      45313  GET /api/playlists HTTP/1.1
-   13   1.781   0.1370   0.3775   0.004   0.007   0.205   1.432   1.432   1.432   13    0    0    0        1131         87         87         87  POST /api/playlist/add HTTP/1.1
-   11  16.733   1.5212   0.1895   1.060   1.525   1.679   1.869   1.869   1.869   11    0    0    0      437527      39764      39775      39784  GET /api/popular_playlists HTTP/1.1
-   39  29.497   0.7563   0.1479   0.524   0.730   1.004   1.102   1.104   1.104   39    0    0    0     1544517      39552      39603      39622  GET /api/recent_playlists HTTP/1.1
-   45   1.321   0.0294   0.0520   0.006   0.012   0.060   0.123   0.300   0.300   26    0   19    0        2584         38         57         84  POST /api/login HTTP/1.1
-  297  80.890   0.2724   0.0452   0.095   0.275   0.326   0.339   0.360   0.400  292    0    5    0     2963114          0       9976      20581  GET /api/playlist/{id}
-  279  81.916   0.2936   0.0413   0.101   0.295   0.345   0.355   0.400   0.407  276    0    3    0     2826726          0      10131      20602  POST /api/playlist/{id}/favorite
-    2   0.274   0.1370   0.0010   0.136   0.138   0.138   0.138   0.138   0.138    2    0    0    0          76         38         38         38  POST /api/signup HTTP/1.1
-    1  12.781  12.7810   0.0000  12.781  12.781  12.781  12.781  12.781  12.781    1    0    0    0          38         38         38         38  POST /initialize HTTP/1.1
-    2   0.088   0.0440   0.0000   0.044   0.044   0.044   0.044   0.044   0.044    2    0    0    0         375        187        187        188  POST /api/admin/user/ban HTTP/1.1
-    1   0.261   0.2610   0.0000   0.261   0.261   0.261   0.261   0.261   0.261    1    0    0    0          38         38         38         38  POST /api/playlist/{id}/delete
+   15  24.454   1.6303   1.0696   0.036   1.490   2.982   4.067   4.067   4.067   14    0    1    0       81759          0       5450      18943  POST /api/playlist/{id}/update
+   17   4.379   0.2576   0.5617   0.005   0.006   1.162   2.159   2.159   2.159   17    0    0    0        1479         87         87         87  POST /api/playlist/add HTTP/1.1
+   14  19.663   1.4045   0.4015   0.112   1.480   1.695   1.852   1.852   1.852   13    0    1    0      517064          0      36933      39782  GET /api/popular_playlists HTTP/1.1
+   50  67.511   1.3502   0.3752   0.017   1.443   1.660   1.687   1.700   1.700   47    0    3    0       83284          0       1665      15470  GET /api/playlists HTTP/1.1
+   44  35.039   0.7963   0.2457   0.522   0.723   1.210   1.422   1.471   1.471   41    0    3    0     1624269          0      36915      39664  GET /api/recent_playlists HTTP/1.1
+  260  68.561   0.2637   0.0488   0.075   0.270   0.319   0.339   0.369   0.375  256    0    4    0     2526453          0       9717      20603  GET /api/playlist/{id}
+   50   1.716   0.0343   0.0475   0.006   0.014   0.088   0.136   0.262   0.262   31    0   19    0        2774         38         55         84  POST /api/login HTTP/1.1
+  285  82.469   0.2894   0.0447   0.168   0.287   0.351   0.357   0.401   0.438  284    0    1    0     2804587          0       9840      20446  POST /api/playlist/{id}/favorite
+    2   0.056   0.0280   0.0200   0.008   0.048   0.048   0.048   0.048   0.048    2    0    0    0         387        193        193        194  POST /api/admin/user/ban HTTP/1.1
+    2   0.288   0.1440   0.0130   0.131   0.157   0.157   0.157   0.157   0.157    2    0    0    0          76         38         38         38  POST /api/signup HTTP/1.1
+    1  13.260  13.2600   0.0000  13.260  13.260  13.260  13.260  13.260  13.260    1    0    0    0          38         38         38         38  POST /initialize HTTP/1.1
+    1   0.298   0.2980   0.0000   0.298   0.298   0.298   0.298   0.298   0.298    1    0    0    0          38         38         38         38  POST /api/playlist/{id}/delete
     1   0.009   0.0090   0.0000   0.009   0.009   0.009   0.009   0.009   0.009    1    0    0    0          10         10         10         10  GET /api/bench/stop HTTP/1.1
-    1   0.009   0.0090   0.0000   0.009   0.009   0.009   0.009   0.009   0.009    1    0    0    0          38         38         38         38  POST /api/logout HTTP/1.1
-    1   0.003   0.0030   0.0000   0.003   0.003   0.003   0.003   0.003   0.003    1    0    0    0          11         11         11         11  GET /api/bench/start HTTP/1.1
+    1   0.007   0.0070   0.0000   0.007   0.007   0.007   0.007   0.007   0.007    1    0    0    0          38         38         38         38  POST /api/logout HTTP/1.1
+    1   0.001   0.0010   0.0000   0.001   0.001   0.001   0.001   0.001   0.001    1    0    0    0          11         11         11         11  GET /api/bench/start HTTP/1.1
     1   0.000   0.0000   0.0000   0.000   0.000   0.000   0.000   0.000   0.000    1    0    0    0        1165       1165       1165       1165  GET / HTTP/1.1
 
 Top 20 Sort By Maximum(100 Percentile)
 Count   Total     Mean   Stddev     Min   P50.0   P90.0   P95.0   P99.0     Max  2xx  3xx  4xx  5xx  TotalBytes   MinBytes  MeanBytes   MaxBytes  Request
-    1  12.781  12.7810   0.0000  12.781  12.781  12.781  12.781  12.781  12.781    1    0    0    0          38         38         38         38  POST /initialize HTTP/1.1
-   13  29.840   2.2954   0.9080   0.666   2.437   3.367   3.621   3.621   3.621   11    0    2    0      102502          0       7884      16643  POST /api/playlist/{id}/update
-   11  16.733   1.5212   0.1895   1.060   1.525   1.679   1.869   1.869   1.869   11    0    0    0      437527      39764      39775      39784  GET /api/popular_playlists HTTP/1.1
-   39  52.843   1.3549   0.3888   0.011   1.489   1.645   1.754   1.806   1.806   37    0    2    0      260937         68       6690      45313  GET /api/playlists HTTP/1.1
-   13   1.781   0.1370   0.3775   0.004   0.007   0.205   1.432   1.432   1.432   13    0    0    0        1131         87         87         87  POST /api/playlist/add HTTP/1.1
-   39  29.497   0.7563   0.1479   0.524   0.730   1.004   1.102   1.104   1.104   39    0    0    0     1544517      39552      39603      39622  GET /api/recent_playlists HTTP/1.1
-  279  81.916   0.2936   0.0413   0.101   0.295   0.345   0.355   0.400   0.407  276    0    3    0     2826726          0      10131      20602  POST /api/playlist/{id}/favorite
-  297  80.890   0.2724   0.0452   0.095   0.275   0.326   0.339   0.360   0.400  292    0    5    0     2963114          0       9976      20581  GET /api/playlist/{id}
-   45   1.321   0.0294   0.0520   0.006   0.012   0.060   0.123   0.300   0.300   26    0   19    0        2584         38         57         84  POST /api/login HTTP/1.1
-    1   0.261   0.2610   0.0000   0.261   0.261   0.261   0.261   0.261   0.261    1    0    0    0          38         38         38         38  POST /api/playlist/{id}/delete
-    2   0.274   0.1370   0.0010   0.136   0.138   0.138   0.138   0.138   0.138    2    0    0    0          76         38         38         38  POST /api/signup HTTP/1.1
-    2   0.088   0.0440   0.0000   0.044   0.044   0.044   0.044   0.044   0.044    2    0    0    0         375        187        187        188  POST /api/admin/user/ban HTTP/1.1
+    1  13.260  13.2600   0.0000  13.260  13.260  13.260  13.260  13.260  13.260    1    0    0    0          38         38         38         38  POST /initialize HTTP/1.1
+   15  24.454   1.6303   1.0696   0.036   1.490   2.982   4.067   4.067   4.067   14    0    1    0       81759          0       5450      18943  POST /api/playlist/{id}/update
+   17   4.379   0.2576   0.5617   0.005   0.006   1.162   2.159   2.159   2.159   17    0    0    0        1479         87         87         87  POST /api/playlist/add HTTP/1.1
+   14  19.663   1.4045   0.4015   0.112   1.480   1.695   1.852   1.852   1.852   13    0    1    0      517064          0      36933      39782  GET /api/popular_playlists HTTP/1.1
+   50  67.511   1.3502   0.3752   0.017   1.443   1.660   1.687   1.700   1.700   47    0    3    0       83284          0       1665      15470  GET /api/playlists HTTP/1.1
+   44  35.039   0.7963   0.2457   0.522   0.723   1.210   1.422   1.471   1.471   41    0    3    0     1624269          0      36915      39664  GET /api/recent_playlists HTTP/1.1
+  285  82.469   0.2894   0.0447   0.168   0.287   0.351   0.357   0.401   0.438  284    0    1    0     2804587          0       9840      20446  POST /api/playlist/{id}/favorite
+  260  68.561   0.2637   0.0488   0.075   0.270   0.319   0.339   0.369   0.375  256    0    4    0     2526453          0       9717      20603  GET /api/playlist/{id}
+    1   0.298   0.2980   0.0000   0.298   0.298   0.298   0.298   0.298   0.298    1    0    0    0          38         38         38         38  POST /api/playlist/{id}/delete
+   50   1.716   0.0343   0.0475   0.006   0.014   0.088   0.136   0.262   0.262   31    0   19    0        2774         38         55         84  POST /api/login HTTP/1.1
+    2   0.288   0.1440   0.0130   0.131   0.157   0.157   0.157   0.157   0.157    2    0    0    0          76         38         38         38  POST /api/signup HTTP/1.1
+    2   0.056   0.0280   0.0200   0.008   0.048   0.048   0.048   0.048   0.048    2    0    0    0         387        193        193        194  POST /api/admin/user/ban HTTP/1.1
     1   0.009   0.0090   0.0000   0.009   0.009   0.009   0.009   0.009   0.009    1    0    0    0          10         10         10         10  GET /api/bench/stop HTTP/1.1
-    1   0.009   0.0090   0.0000   0.009   0.009   0.009   0.009   0.009   0.009    1    0    0    0          38         38         38         38  POST /api/logout HTTP/1.1
-    1   0.003   0.0030   0.0000   0.003   0.003   0.003   0.003   0.003   0.003    1    0    0    0          11         11         11         11  GET /api/bench/start HTTP/1.1
+    1   0.007   0.0070   0.0000   0.007   0.007   0.007   0.007   0.007   0.007    1    0    0    0          38         38         38         38  POST /api/logout HTTP/1.1
+    1   0.001   0.0010   0.0000   0.001   0.001   0.001   0.001   0.001   0.001    1    0    0    0          11         11         11         11  GET /api/bench/start HTTP/1.1
     1   0.000   0.0000   0.0000   0.000   0.000   0.000   0.000   0.000   0.000    1    0    0    0        1165       1165       1165       1165  GET / HTTP/1.1
 
 TOP 37 Slow Requests
- 1  12.781  POST /initialize HTTP/1.1
- 2   3.621  POST /api/playlist/01G4BTMRYAGQPJTZQ57RTA451P/update HTTP/1.1
- 3   3.367  POST /api/playlist/01G4BTMXSSPMS443GDFXPZKW6Z/update HTTP/1.1
- 4   3.117  POST /api/playlist/01G4BTN8HT8WCY0VRD0ZCZAVNE/update HTTP/1.1
- 5   3.056  POST /api/playlist/01G4BTN8VFJJ93TKEG17KV1DVR/update HTTP/1.1
- 6   2.740  POST /api/playlist/01G4BTMH3CKJS7RKJ07PJYEKCC/update HTTP/1.1
- 7   2.717  POST /api/playlist/01G4BTKW0FDDFS24MCHSFRZ73C/update HTTP/1.1
- 8   2.437  POST /api/playlist/01G4BTM54C2S80GG9JF63NX59V/update HTTP/1.1
- 9   2.063  POST /api/playlist/01G4BTM9MSRTNYHZG6PAEW283W/update HTTP/1.1
-10   1.954  POST /api/playlist/01G4BTN1QKWYW23ZAXGGE36RPB/update HTTP/1.1
-11   1.911  POST /api/playlist/01G4BTKMTZY9S2NG4KYRVHNRP4/update HTTP/1.1
-12   1.869  GET /api/popular_playlists HTTP/1.1
-13   1.806  GET /api/playlists HTTP/1.1
-14   1.754  GET /api/playlists HTTP/1.1
-15   1.697  GET /api/playlists HTTP/1.1
-16   1.679  GET /api/popular_playlists HTTP/1.1
-17   1.645  GET /api/playlists HTTP/1.1
-18   1.645  GET /api/playlists HTTP/1.1
-19   1.635  GET /api/popular_playlists HTTP/1.1
-20   1.624  GET /api/playlists HTTP/1.1
-21   1.604  GET /api/popular_playlists HTTP/1.1
-22   1.591  GET /api/playlists HTTP/1.1
-23   1.590  GET /api/playlists HTTP/1.1
-24   1.581  GET /api/playlists HTTP/1.1
-25   1.562  GET /api/playlists HTTP/1.1
-26   1.557  GET /api/playlists HTTP/1.1
-27   1.553  GET /api/playlists HTTP/1.1
-28   1.550  GET /api/playlists HTTP/1.1
-29   1.546  GET /api/playlists HTTP/1.1
-30   1.528  GET /api/popular_playlists HTTP/1.1
-31   1.525  GET /api/popular_playlists HTTP/1.1
-32   1.521  GET /api/playlists HTTP/1.1
-33   1.518  GET /api/playlists HTTP/1.1
-34   1.517  GET /api/playlists HTTP/1.1
-35   1.508  GET /api/playlists HTTP/1.1
-36   1.502  GET /api/playlists HTTP/1.1
-37   1.489  GET /api/playlists HTTP/1.1
+ 1  13.260  POST /initialize HTTP/1.1
+ 2   4.067  POST /api/playlist/01G4BXTRPZF35BV1ERQRC2AMCH/update HTTP/1.1
+ 3   2.982  POST /api/playlist/01G4BXT38F97BF71HP6BW035JY/update HTTP/1.1
+ 4   2.587  POST /api/playlist/01G4BXTW3K4JRP6GSE1QEP2WE8/update HTTP/1.1
+ 5   2.432  POST /api/playlist/01G4BXV2QE8906P4Y8VHFGJN5Q/update HTTP/1.1
+ 6   2.354  POST /api/playlist/01G4BXV1VNM00JWPQ3QT490XPB/update HTTP/1.1
+ 7   2.159  POST /api/playlist/add HTTP/1.1
+ 8   2.005  POST /api/playlist/01G4BXTH3ND36F4196BKHQJGEY/update HTTP/1.1
+ 9   1.852  GET /api/popular_playlists HTTP/1.1
+10   1.700  GET /api/playlists HTTP/1.1
+11   1.699  GET /api/playlists HTTP/1.1
+12   1.695  GET /api/popular_playlists HTTP/1.1
+13   1.687  GET /api/playlists HTTP/1.1
+14   1.662  GET /api/playlists HTTP/1.1
+15   1.660  GET /api/playlists HTTP/1.1
+16   1.660  GET /api/popular_playlists HTTP/1.1
+17   1.660  GET /api/playlists HTTP/1.1
+18   1.652  GET /api/playlists HTTP/1.1
+19   1.649  GET /api/playlists HTTP/1.1
+20   1.646  GET /api/popular_playlists HTTP/1.1
+21   1.642  POST /api/playlist/01G4BXT24FFS804GXYF0E4Z4H8/update HTTP/1.1
+22   1.633  GET /api/playlists HTTP/1.1
+23   1.610  GET /api/playlists HTTP/1.1
+24   1.608  GET /api/playlists HTTP/1.1
+25   1.607  GET /api/playlists HTTP/1.1
+26   1.595  GET /api/playlists HTTP/1.1
+27   1.584  GET /api/playlists HTTP/1.1
+28   1.563  GET /api/popular_playlists HTTP/1.1
+29   1.562  GET /api/playlists HTTP/1.1
+30   1.559  GET /api/playlists HTTP/1.1
+31   1.547  GET /api/popular_playlists HTTP/1.1
+32   1.547  GET /api/playlists HTTP/1.1
+33   1.535  GET /api/playlists HTTP/1.1
+34   1.518  GET /api/playlists HTTP/1.1
+35   1.505  GET /api/playlists HTTP/1.1
+36   1.490  POST /api/playlist/01G4BXTKQECB3QPMRZEWGXCYFE/update HTTP/1.1
+37   1.480  GET /api/popular_playlists HTTP/1.1
