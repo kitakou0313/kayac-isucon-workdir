@@ -431,8 +431,10 @@ func getSongsCountByPlaylistID(ctx context.Context, db connOrTx, playlistID int)
 	return count, nil
 }
 
+// N+1
 func getRecentPlaylistSummaries(ctx context.Context, db connOrTx, userAccount string) ([]Playlist, error) {
 	var allPlaylists []PlaylistRow
+	// 元々Banされてたら取得しない
 	if err := db.SelectContext(
 		ctx,
 		&allPlaylists,
