@@ -432,13 +432,30 @@ func getSongsCountByPlaylistID(ctx context.Context, db connOrTx, playlistID int)
 }
 
 // N+1
+
+type PlaylistAndUserRow struct {
+	ID              int       `db:"id"`
+	ULID            string    `db:"ulid"`
+	Name            string    `db:"name"`
+	UserAccount     string    `db:"user_account"`
+	IsPublic        bool      `db:"is_public"`
+	CreatedAt       time.Time `db:"created_at"`
+	UpdatedAt       time.Time `db:"updated_at"`
+	UserDisplayName string    `db:"display_name"`
+}
+
 func getRecentPlaylistSummaries(ctx context.Context, db connOrTx, userAccount string) ([]Playlist, error) {
-	var allPlaylists []PlaylistRow
-	// 元々Banされてたら取得しない
+	var allPlaylists []PlaylistAndUserRow
+	// 元々Banされてたら取得しない+下で100行ブレイクがなくなるため最新100だけもってくればよい
 	if err := db.SelectContext(
 		ctx,
 		&allPlaylists,
-		"SELECT * FROM playlist where is_public = ? ORDER BY created_at DESC",
+		// "SELECT * FROM playlist where is_public = ? ORDER BY created_at DESC",
+		`SELECT playlist.id, playlist.ulid, playlist.name, playlist.user_account, playlist.is_public, playlist.created_at, playlist.updated_at, user.display_name
+		FROM playlist
+		INNER JOIN user
+		ON user.is_ban=0 AND playlist.user_account=user.account AND playlist.is_public=?
+		ORDER BY created_at DESC LIMIT 100`,
 		true,
 	); err != nil {
 		return nil, fmt.Errorf(
@@ -452,13 +469,13 @@ func getRecentPlaylistSummaries(ctx context.Context, db connOrTx, userAccount st
 
 	playlists := make([]Playlist, 0, len(allPlaylists))
 	for _, playlist := range allPlaylists {
-		user, err := getUserByAccount(ctx, db, playlist.UserAccount)
-		if err != nil {
-			return nil, fmt.Errorf("error getUserByAccount: %w", err)
-		}
-		if user == nil || user.IsBan {
-			continue
-		}
+		// user, err := getUserByAccount(ctx, db, playlist.UserAccount)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("error getUserByAccount: %w", err)
+		// }
+		// if user == nil || user.IsBan {
+		// 	continue
+		// }
 
 		songCount, err := getSongsCountByPlaylistID(ctx, db, playlist.ID)
 		if err != nil {
@@ -481,8 +498,8 @@ func getRecentPlaylistSummaries(ctx context.Context, db connOrTx, userAccount st
 		playlists = append(playlists, Playlist{
 			ULID:            playlist.ULID,
 			Name:            playlist.Name,
-			UserDisplayName: user.DisplayName,
-			UserAccount:     user.Account,
+			UserDisplayName: playlist.UserDisplayName,
+			UserAccount:     playlist.UserAccount,
 			SongCount:       songCount,
 			FavoriteCount:   favoriteCount,
 			IsFavorited:     isFavorited,
