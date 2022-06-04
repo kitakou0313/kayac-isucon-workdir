@@ -541,27 +541,16 @@ func getPopularPlaylistSummaries(ctx context.Context, db connOrTx, userAccount s
 		CreatedAt       time.Time `db:"created_at"`
 		UpdatedAt       time.Time `db:"updated_at"`
 		UserDisplayName string    `db:"display_name"`
-		PlaylistID      int       `db:"playlist_id"`
 		FavoriteCount   int       `db:"favorite_count"`
 	}
 	if err := db.SelectContext(
 		ctx,
 		&queryRows,
-		`SELECT playlist.id, playlist.ulid, playlist.name, playlist.user_account, playlist.is_public, playlist.created_at, playlist.updated_at, user.display_name, cnt.favorite_count, cnt.playlist_id
-		FROM (
-		  SELECT playlist_id, count(*) AS favorite_count 
-		  FROM playlist_favorite
-		  INNER JOIN playlist
-		  ON playlist.is_public=1 AND playlist_favorite.playlist_id=playlist.id
-		  INNER JOIN user
-		  ON user.is_ban=0 AND playlist.user_account=user.account
-		  GROUP BY playlist_id
-		  ORDER BY count(*) DESC LIMIT 100
-		) cnt
-		INNER JOIN playlist
-		ON cnt.playlist_id=playlist.id
+		`SELECT playlist.id, playlist.ulid, playlist.name, playlist.user_account, playlist.is_public, playlist.created_at, playlist.updated_at, user.display_name, playlist.fav_cnt AS favorite_count
+		FROM playlist
 		INNER JOIN user
-		ON playlist.user_account=user.account`,
+		ON user.is_ban=0 AND playlist.user_account=user.account AND playlist.is_public=1
+		ORDER BY fav_cnt DESC LIMIT 100`,
 	); err != nil {
 		return nil, fmt.Errorf(
 			"error Select playlist_favorite: %w",
@@ -1804,25 +1793,62 @@ func apiPlaylistFavoriteHandler(c echo.Context) error {
 			c.Logger().Errorf("error getPlaylistFavoritesByPlaylistIDAndUserAccount: %s", err)
 			return errorResponse(c, 500, "internal server error")
 		}
+		// 二重favの防止
 		if playlistFavorite == nil {
-			if err := insertPlaylistFavorite(ctx, conn, playlist.ID, userAccount, createdTimestamp); err != nil {
+			tx, err := conn.BeginTxx(ctx, nil)
+			if err != nil {
+				c.Logger().Errorf("error conn.BeginTxx: %s", err)
+				return errorResponse(c, 500, "internal server error")
+			}
+
+			if err := insertPlaylistFavorite(ctx, tx, playlist.ID, userAccount, createdTimestamp); err != nil {
+				tx.Rollback()
 				c.Logger().Errorf("error insertPlaylistFavorite: %s", err)
 				return errorResponse(c, 500, "internal server error")
 			}
+
+			if _, err := tx.ExecContext(
+				ctx,
+				"UPDATE playlist SET `fav_cnt` = `fav_cnt`+1 WHERE `id` = ?",
+				playlist.ID,
+			); err != nil {
+				tx.Rollback()
+				c.Logger().Errorf("error update fav_cnt+1: %s", err)
+				return errorResponse(c, 500, "internal server error")
+			}
+			tx.Commit()
 		}
 	} else {
 		// delete
-		if _, err := conn.ExecContext(
+		tx, err := conn.BeginTxx(ctx, nil)
+		if err != nil {
+			c.Logger().Errorf("error conn.BeginTxx: %s", err)
+			return errorResponse(c, 500, "internal server error")
+		}
+
+		if _, err := tx.ExecContext(
 			ctx,
 			"DELETE FROM playlist_favorite WHERE `playlist_id` = ? AND `favorite_user_account` = ?",
 			playlist.ID, userAccount,
 		); err != nil {
+			tx.Rollback()
 			c.Logger().Errorf(
 				"error Delete playlist_favorite by playlist_id=%d, favorite_user_account=%s: %s",
 				playlist.ID, userAccount, err,
 			)
 			return errorResponse(c, 500, "internal server error")
 		}
+
+		if _, err := tx.ExecContext(
+			ctx,
+			"UPDATE playlist SET `fav_cnt` = `fav_cnt`-1 WHERE `id` = ?",
+			playlist.ID,
+		); err != nil {
+			tx.Rollback()
+			c.Logger().Errorf("error update fav_cnt - 1: %s", err)
+			return errorResponse(c, 500, "internal server error")
+		}
+		tx.Commit()
 	}
 
 	playlistDetail, err := getPlaylistDetailByPlaylistULID(ctx, conn, playlist.ULID, &userAccount)
@@ -1980,6 +2006,18 @@ func initializeHandler(c echo.Context) error {
 		ctx,
 		"DELETE FROM playlist_favorite WHERE playlist_id NOT IN (SELECT id FROM playlist) OR ? < created_at",
 		lastCreatedAt,
+	); err != nil {
+		c.Logger().Errorf("error: initialize %s", err)
+		return errorResponse(c, 500, "internal server error")
+	}
+
+	if _, err := conn.ExecContext(
+		ctx,
+		`UPDATE playlist SET fav_cnt = (
+			SELECT count(*)
+			FROM playlist_favorite
+			WHERE playlist_favorite.playlist_id=playlist.id
+		)`,
 	); err != nil {
 		c.Logger().Errorf("error: initialize %s", err)
 		return errorResponse(c, 500, "internal server error")
