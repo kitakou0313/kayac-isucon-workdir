@@ -5,6 +5,8 @@ CREATE INDEX ulid_index ON isucon_listen80.song (ulid);
 CREATE INDEX ulid_index ON isucon_listen80.playlist (ulid);
 CREATE INDEX is_pub_created_at ON isucon_listen80.playlist (is_public, created_at);
 CREATE INDEX is_pub_fav_cnt ON isucon_listen80.playlist (is_public, fav_cnt);
+CREATE INDEX user_acc_created ON isucon_listen80.playlist (user_account, created_at);
+
 
 -- playlist_song index
 CREATE INDEX playlist_id_idx ON isucon_listen80.playlist_song (playlist_id);
