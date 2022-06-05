@@ -399,6 +399,36 @@ func isFavoritedBy(ctx context.Context, db connOrTx, userAccount string, playlis
 	return count > 0, nil
 }
 
+// N+1改善用　playlistIDをkey, userAccountからfavされたかをvalueとするmap
+func getMapPlaylistIdToIsFavoritedBy(ctx context.Context, db connOrTx, userAccount string, playlistIDs []int) (map[int]bool, error) {
+	var playlistFavNumRows []struct {
+		ID     int `db:"playlist_id"`
+		FavNum int `db:"cnt"`
+	}
+
+	queryString := "SELECT playlist_id, COUNT(*) AS cnt FROM playlist_favorite where playlist_id IN (?) AND favorite_user_account = '" + userAccount + "' GROUP BY playlist_id"
+	queryString, paramIDs, err := sqlx.In(queryString, playlistIDs)
+	if err != nil {
+		return nil, fmt.Errorf("error Get song by ulid=%v: %w", playlistIDs, err)
+	}
+	if err := db.SelectContext(
+		ctx,
+		&playlistFavNumRows,
+		queryString,
+		paramIDs...,
+	); err != nil {
+		return nil, fmt.Errorf(
+			"error Get count of playlist_favorite by favorite_user_account=%s, playlist_id=%v: %w",
+			userAccount, playlistIDs, err,
+		)
+	}
+	playlistToFavContMap := map[int]bool{}
+	for _, row := range playlistFavNumRows {
+		playlistToFavContMap[row.ID] = (row.FavNum > 0)
+	}
+	return playlistToFavContMap, nil
+}
+
 func getFavoritesCountByPlaylistID(ctx context.Context, db connOrTx, playlistID int) (int, error) {
 	var count int
 	if err := db.GetContext(
@@ -415,6 +445,39 @@ func getFavoritesCountByPlaylistID(ctx context.Context, db connOrTx, playlistID 
 	return count, nil
 }
 
+// N+1改善用　playlistIDをkey、valueがfav数のmapを返す
+func getMapOfFavoritesCountByPlaylistID(ctx context.Context, db connOrTx, playlistIDs []int) (map[int]int, error) {
+	var playlistFavNumRows []struct {
+		ID     int `db:"id"`
+		FavNum int `db:"cnt"`
+	}
+
+	queryString := "SELECT id, fav_cnt AS cnt FROM playlist where id IN (?)"
+	queryString, paramIDs, err := sqlx.In(queryString, playlistIDs)
+	if err != nil {
+		return nil, fmt.Errorf("error Get song by ulid=%v: %w", playlistIDs, err)
+	}
+
+	if err := db.SelectContext(
+		ctx,
+		&playlistFavNumRows,
+		queryString,
+		paramIDs...,
+	); err != nil {
+		return nil, fmt.Errorf(
+			"error Get count of playlist_favorite by playlist_id=%v: %w",
+			playlistIDs, err,
+		)
+	}
+
+	playlistToFavContMap := map[int]int{}
+	for _, row := range playlistFavNumRows {
+		playlistToFavContMap[row.ID] = row.FavNum
+	}
+
+	return playlistToFavContMap, nil
+}
+
 func getSongsCountByPlaylistID(ctx context.Context, db connOrTx, playlistID int) (int, error) {
 	var count int
 	if err := db.GetContext(
@@ -429,6 +492,40 @@ func getSongsCountByPlaylistID(ctx context.Context, db connOrTx, playlistID int)
 		)
 	}
 	return count, nil
+}
+
+// N+1改善用 playlistIDをkey、valueが登録曲数のmapを返す
+func getListOfSongsCountByPlaylistIDs(ctx context.Context, db connOrTx, playlistIDs []int) (map[int]int, error) {
+	var playlistSongNumRows []struct {
+		ID  int `db:"playlist_id"`
+		Cnt int `db:"cnt"`
+	}
+
+	queryString := "SELECT playlist_id, COUNT(*) AS cnt FROM playlist_song where playlist_id IN (?) GROUP BY playlist_id"
+	queryString, paramIDs, err := sqlx.In(queryString, playlistIDs)
+	if err != nil {
+		return nil, fmt.Errorf("error Get song by ulid=%v: %w", playlistIDs, err)
+	}
+
+	if err := db.SelectContext(
+		ctx,
+		&playlistSongNumRows,
+		queryString,
+		paramIDs...,
+	); err != nil {
+		return nil, fmt.Errorf(
+			"error Get count of playlist_song by playlist_id=%d: %w",
+			paramIDs, err,
+		)
+	}
+
+	playlistSongNumMap := map[int]int{}
+
+	for _, row := range playlistSongNumRows {
+		playlistSongNumMap[row.ID] = row.Cnt
+	}
+
+	return playlistSongNumMap, nil
 }
 
 // N+1
@@ -467,6 +564,26 @@ func getRecentPlaylistSummaries(ctx context.Context, db connOrTx, userAccount st
 		return nil, nil
 	}
 
+	playListIdList := make([]int, 0, len(allPlaylists))
+	for _, playlist := range allPlaylists {
+		playListIdList = append(playListIdList, playlist.ID)
+	}
+
+	playlistIdToSongNumMap, err := getListOfSongsCountByPlaylistIDs(ctx, db, playListIdList)
+	if err != nil {
+		return nil, fmt.Errorf("error getListOfSongsCountByPlaylistIDs: %w", err)
+	}
+
+	playlistIdToFavNumMap, err := getMapOfFavoritesCountByPlaylistID(ctx, db, playListIdList)
+	if err != nil {
+		return nil, fmt.Errorf("error getMapOfFavoritesCountByPlaylistID: %w", err)
+	}
+
+	playlistIdToIsFavByUser, err := getMapPlaylistIdToIsFavoritedBy(ctx, db, userAccount, playListIdList)
+	if err != nil {
+		return nil, fmt.Errorf("error getMapPlaylistIdToIsFavoritedBy: %w", err)
+	}
+
 	playlists := make([]Playlist, 0, len(allPlaylists))
 	for _, playlist := range allPlaylists {
 		// user, err := getUserByAccount(ctx, db, playlist.UserAccount)
@@ -477,22 +594,19 @@ func getRecentPlaylistSummaries(ctx context.Context, db connOrTx, userAccount st
 		// 	continue
 		// }
 
-		songCount, err := getSongsCountByPlaylistID(ctx, db, playlist.ID)
-		if err != nil {
-			return nil, fmt.Errorf("error getSongsCountByPlaylistID: %w", err)
-		}
-		favoriteCount, err := getFavoritesCountByPlaylistID(ctx, db, playlist.ID)
-		if err != nil {
-			return nil, fmt.Errorf("error getFavoritesCountByPlaylistID: %w", err)
-		}
+		// songCount, err := getSongsCountByPlaylistID(ctx, db, playlist.ID)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("error getSongsCountByPlaylistID: %w", err)
+		// }
+
+		// favoriteCount, err := getFavoritesCountByPlaylistID(ctx, db, playlist.ID)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("error getFavoritesCountByPlaylistID: %w", err)
+		// }
 
 		var isFavorited bool
 		if userAccount != anonUserAccount {
-			var err error
-			isFavorited, err = isFavoritedBy(ctx, db, userAccount, playlist.ID)
-			if err != nil {
-				return nil, fmt.Errorf("error isFavoritedBy: %w", err)
-			}
+			isFavorited = playlistIdToIsFavByUser[playlist.ID]
 		}
 
 		playlists = append(playlists, Playlist{
@@ -500,16 +614,13 @@ func getRecentPlaylistSummaries(ctx context.Context, db connOrTx, userAccount st
 			Name:            playlist.Name,
 			UserDisplayName: playlist.UserDisplayName,
 			UserAccount:     playlist.UserAccount,
-			SongCount:       songCount,
-			FavoriteCount:   favoriteCount,
+			SongCount:       playlistIdToSongNumMap[playlist.ID],
+			FavoriteCount:   playlistIdToFavNumMap[playlist.ID],
 			IsFavorited:     isFavorited,
 			IsPublic:        playlist.IsPublic,
 			CreatedAt:       playlist.CreatedAt,
 			UpdatedAt:       playlist.UpdatedAt,
 		})
-		if len(playlists) >= 100 {
-			break
-		}
 	}
 	return playlists, nil
 }
