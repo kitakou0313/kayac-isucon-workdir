@@ -3,6 +3,6 @@
 ## 最新スコア
 
 ```
-11:05:56.385261 SCORE: 3496 (+3496 0)
-11:05:56.385445 RESULT: score.ScoreTable{"GET /api/playlist/{}":1117, "GET /api/playlists":107, "GET /api/popular_playlists":28, "GET /api/popular_playlists (login)":13, "GET /api/recent_playlists":66, "GET /api/recent_playlists (login)":73, "POST /api/login":89, "POST /api/playlist/favorite":832, "POST /api/playlist/{}/add":37, "POST /api/playlist/{}/update":36}
+12:37:14.363943 SCORE: 5525 (+5535 -10)
+12:37:14.364168 RESULT: score.ScoreTable{"GET /api/playlist/{}":2246, "GET /api/playlists":144, "GET /api/popular_playlists":50, "GET /api/popular_playlists (login)":25, "GET /api/recent_playlists":139, "GET /api/recent_playlists (login)":100, "POST /api/login":111, "POST /api/playlist/favorite":1097, "POST /api/playlist/{}/add":48, "POST /api/playlist/{}/update":45}
 ```
