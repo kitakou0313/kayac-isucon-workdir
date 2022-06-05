@@ -1,0 +1,65 @@
+version: '3.0'
+
+services:
+  nginx:
+    image: nginx:1.20
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./public:/public
+      - ./nginx/log:/var/log/nginx/
+    ports:
+      - "80:80"
+    links:
+      - app
+    restart: always
+
+  app:
+    # Go実装の場合は golang/ node実装の場合は node/
+    build: golang/
+    environment:
+      ISUCON_DB_HOST: mysql
+      ISUCON_DB_PORT: 3306
+      ISUCON_DB_USER: isucon
+      ISUCON_DB_PASSWORD: isucon
+      ISUCON_DB_NAME: isucon_listen80
+    links:
+      - mysql
+    volumes:
+      - type: bind
+        source: ./golang/isucon
+        target: /home/isucon/webapp/isucon
+      - ./public:/home/isucon/webapp/public
+      - ./golang/pprof:/etc/pprof
+      - gopkg:/usr/local/go/pkg
+    # init: true
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+
+  mysql:
+    image: mysql/mysql-server:8.0.28
+    # M1 mac(ARM)の場合は aarch64 のimageに変更する
+    # image: mysql/mysql-server:8.0.28-aarch64
+    environment:
+      - "MYSQL_ROOT_HOST=%"
+      - "MYSQL_ROOT_PASSWORD=root"
+    volumes:
+      - ../sql:/docker-entrypoint-initdb.d
+      - mysql:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/my.cnf
+      - ./mysql/logs:/var/log/mysql
+    ports:
+      - 13306:3306
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '2.0'
+
+volumes:
+  mysql:
+  gopkg:
