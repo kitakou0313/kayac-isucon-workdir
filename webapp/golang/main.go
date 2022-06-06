@@ -672,6 +672,32 @@ func getPopularPlaylistSummaries(ctx context.Context, db connOrTx, userAccount s
 	if len(queryRows) == 0 {
 		return nil, nil
 	}
+
+	playListIdList := make([]int, 0, len(queryRows))
+	for _, playlist := range queryRows {
+		playListIdList = append(playListIdList, playlist.ID)
+	}
+
+	playlistIdToSongNumMap, err := getListOfSongsCountByPlaylistIDs(ctx, db, playListIdList)
+	if err != nil {
+		return nil, fmt.Errorf("error getListOfSongsCountByPlaylistIDs: %w", err)
+	}
+
+	playlistIdToFavNumMap, err := getMapOfFavoritesCountByPlaylistID(ctx, db, playListIdList)
+	if err != nil {
+		return nil, fmt.Errorf("error getMapOfFavoritesCountByPlaylistID: %w", err)
+	}
+
+	playlistIdToIsFavByUser := map[int]bool{}
+
+	if userAccount != anonUserAccount {
+		// 認証済みの場合はfavを取得
+		playlistIdToIsFavByUser, err = getMapPlaylistIdToIsFavoritedBy(ctx, db, userAccount, playListIdList)
+		if err != nil {
+			return nil, fmt.Errorf("error getMapPlaylistIdToIsFavoritedBy: %w", err)
+		}
+	}
+
 	playlists := make([]Playlist, 0, len(queryRows))
 	for _, p := range queryRows {
 		// playlist, err := getPlaylistByID(ctx, db, p.PlaylistID)
@@ -692,23 +718,20 @@ func getPopularPlaylistSummaries(ctx context.Context, db connOrTx, userAccount s
 		// 	continue
 		// }
 
-		songCount, err := getSongsCountByPlaylistID(ctx, db, p.ID)
-		if err != nil {
-			return nil, fmt.Errorf("error getSongsCountByPlaylistID: %w", err)
-		}
-		favoriteCount, err := getFavoritesCountByPlaylistID(ctx, db, p.ID)
-		if err != nil {
-			return nil, fmt.Errorf("error getFavoritesCountByPlaylistID: %w", err)
-		}
+		// songCount, err := getSongsCountByPlaylistID(ctx, db, p.ID)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("error getSongsCountByPlaylistID: %w", err)
+		// }
+
+		// favoriteCount, err := getFavoritesCountByPlaylistID(ctx, db, p.ID)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("error getFavoritesCountByPlaylistID: %w", err)
+		// }
 
 		var isFavorited bool
 		if userAccount != anonUserAccount {
 			// 認証済みの場合はfavを取得
-			var err error
-			isFavorited, err = isFavoritedBy(ctx, db, userAccount, p.ID)
-			if err != nil {
-				return nil, fmt.Errorf("error isFavoritedBy: %w", err)
-			}
+			isFavorited = playlistIdToIsFavByUser[p.ID]
 		}
 
 		playlists = append(playlists, Playlist{
@@ -716,8 +739,8 @@ func getPopularPlaylistSummaries(ctx context.Context, db connOrTx, userAccount s
 			Name:            p.Name,
 			UserDisplayName: p.UserDisplayName,
 			UserAccount:     p.UserAccount,
-			SongCount:       songCount,
-			FavoriteCount:   favoriteCount,
+			SongCount:       playlistIdToSongNumMap[p.ID],
+			FavoriteCount:   playlistIdToFavNumMap[p.ID],
 			IsFavorited:     isFavorited,
 			IsPublic:        p.IsPublic,
 			CreatedAt:       p.CreatedAt,
