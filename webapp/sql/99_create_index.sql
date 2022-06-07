@@ -7,6 +7,8 @@ CREATE INDEX is_pub_created_at ON isucon_listen80.playlist (is_public, created_a
 CREATE INDEX is_pub_fav_cnt ON isucon_listen80.playlist (is_public, fav_cnt);
 CREATE INDEX user_acc_created ON isucon_listen80.playlist (user_account, created_at);
 
+-- user index
+CREATE INDEX is_ban_account ON isucon_listen80.user (is_ban, account);
 
 -- playlist_song index
 CREATE INDEX playlist_id_idx ON isucon_listen80.playlist_song (playlist_id);
