@@ -807,11 +807,31 @@ func getCreatedPlaylistSummariesByUserAccount(ctx context.Context, db connOrTx, 
 }
 
 func getFavoritedPlaylistSummariesByUserAccount(ctx context.Context, db connOrTx, userAccount string) ([]Playlist, error) {
-	var playlistFavorites []PlaylistFavoriteRow
+	// var playlistFavorites []PlaylistFavoriteRow
+
+	var playlistFavQueryRow []struct {
+		ID              int       `db:"id"`
+		ULID            string    `db:"ulid"`
+		Name            string    `db:"name"`
+		UserAccount     string    `db:"user_account"`
+		IsPublic        bool      `db:"is_public"`
+		CreatedAt       time.Time `db:"created_at"`
+		UpdatedAt       time.Time `db:"updated_at"`
+		UserDisplayName string    `db:"display_name"`
+	}
+
+	// userがbanされてない且つ非公開の最新のふぁぼしたプレイリスト100を取得
 	if err := db.SelectContext(
 		ctx,
-		&playlistFavorites,
-		"SELECT * FROM playlist_favorite where favorite_user_account = ? ORDER BY created_at DESC",
+		&playlistFavQueryRow,
+		`SELECT playlist.id, playlist.ulid, playlist.name, playlist.user_account, playlist.is_public, playlist.created_at, playlist.updated_at, user.display_name
+		FROM playlist_favorite
+		INNER JOIN playlist
+		ON playlist.is_public=1 AND playlist_favorite.playlist_id=playlist.id
+		INNER JOIN user
+		ON user.is_ban=0 AND playlist.user_account=user.account
+		where favorite_user_account = ?
+		ORDER BY playlist_favorite.created_at DESC LIMIT 100`,
 		userAccount,
 	); err != nil {
 		return nil, fmt.Errorf(
@@ -821,43 +841,77 @@ func getFavoritedPlaylistSummariesByUserAccount(ctx context.Context, db connOrTx
 	}
 
 	playlists := make([]Playlist, 0, 100)
+
+	// お気に入り0件
+	if len(playlistFavQueryRow) == 0 {
+		return playlists, nil
+	}
+
+	playListIdList := make([]int, 0, len(playlistFavQueryRow))
+	for _, row := range playlistFavQueryRow {
+		playListIdList = append(playListIdList, row.ID)
+	}
+
+	playlistIdToSongNumMap, err := getListOfSongsCountByPlaylistIDs(ctx, db, playListIdList)
+	if err != nil {
+		return nil, fmt.Errorf("error getListOfSongsCountByPlaylistIDs: %w", err)
+	}
+
+	playlistIdToFavNumMap, err := getMapOfFavoritesCountByPlaylistID(ctx, db, playListIdList)
+	if err != nil {
+		return nil, fmt.Errorf("error getMapOfFavoritesCountByPlaylistID: %w", err)
+	}
+
+	playlistIdToIsFavByUser, err := getMapPlaylistIdToIsFavoritedBy(ctx, db, userAccount, playListIdList)
+	if err != nil {
+		return nil, fmt.Errorf("error getMapPlaylistIdToIsFavoritedBy: %w", err)
+	}
+
 	// N+1
-	for _, fav := range playlistFavorites {
-		playlist, err := getPlaylistByID(ctx, db, fav.PlaylistID)
-		if err != nil {
-			return nil, fmt.Errorf("error getPlaylistByID: %w", err)
-		}
-		// 非公開は除外する
-		if playlist == nil || !playlist.IsPublic {
-			continue
-		}
-		user, err := getUserByAccount(ctx, db, playlist.UserAccount)
-		if err != nil {
-			return nil, fmt.Errorf("error getUserByAccount: %w", err)
-		}
+	for _, playlist := range playlistFavQueryRow {
+		// playlist, err := getPlaylistByID(ctx, db, fav.PlaylistID)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("error getPlaylistByID: %w", err)
+		// }
+		// // 非公開は除外する
+		// if playlist == nil || !playlist.IsPublic {
+		// 	continue
+		// }
+		// user, err := getUserByAccount(ctx, db, playlist.UserAccount)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("error getUserByAccount: %w", err)
+		// }
 
-		// 作成したユーザーがbanされていたら除外する
-		if user == nil || user.IsBan {
-			return nil, nil
-		}
+		// // 作成したユーザーがbanされていたら除外する
+		// if user == nil || user.IsBan {
+		// 	return nil, nil
+		// }
 
-		songCount, err := getSongsCountByPlaylistID(ctx, db, playlist.ID)
-		if err != nil {
-			return nil, fmt.Errorf("error getSongsCountByPlaylistID: %w", err)
-		}
-		favoriteCount, err := getFavoritesCountByPlaylistID(ctx, db, playlist.ID)
-		if err != nil {
-			return nil, fmt.Errorf("error getFavoritesCountByPlaylistID: err=%w", err)
-		}
-		isFavorited, err := isFavoritedBy(ctx, db, userAccount, playlist.ID)
-		if err != nil {
-			return nil, fmt.Errorf("error isFavoritedBy: %w", err)
-		}
+		// songCount, err := getSongsCountByPlaylistID(ctx, db, playlist.ID)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("error getSongsCountByPlaylistID: %w", err)
+		// }
+
+		songCount := playlistIdToSongNumMap[playlist.ID]
+
+		// favoriteCount, err := getFavoritesCountByPlaylistID(ctx, db, playlist.ID)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("error getFavoritesCountByPlaylistID: err=%w", err)
+		// }
+		favoriteCount := playlistIdToFavNumMap[playlist.ID]
+
+		// isFavorited, err := isFavoritedBy(ctx, db, userAccount, playlist.ID)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("error isFavoritedBy: %w", err)
+		// }
+
+		isFavorited := playlistIdToIsFavByUser[playlist.ID]
+
 		playlists = append(playlists, Playlist{
 			ULID:            playlist.ULID,
 			Name:            playlist.Name,
-			UserDisplayName: user.DisplayName,
-			UserAccount:     user.Account,
+			UserDisplayName: playlist.UserDisplayName,
+			UserAccount:     playlist.UserAccount,
 			SongCount:       songCount,
 			FavoriteCount:   favoriteCount,
 			IsFavorited:     isFavorited,
