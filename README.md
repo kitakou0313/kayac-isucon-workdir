@@ -9,6 +9,7 @@
 
 # CPUコア数の制限がかからないときのスコア Docker desktop windows(Version 4.9.0 (80466))だとdeploy.resources.limits.cpusで2.0に制限してもCPU使用率が200以上になるため制限出来ていなさそう（要調査）
 
-10:40:39.941558 SCORE: 39850 (+40020 -170)
-10:40:39.941608 RESULT: score.ScoreTable{"GET /api/playlist/{}":17170, "GET /api/playlists":982, "GET /api/popular_playlists":678, "GET /api/popular_playlists (login)":309, "GET /api/recent_playlists":775, "GET /api/recent_playlists (login)":649, "POST /api/login":547, "POST /api/playlist/favorite":6811, "POST /api/playlist/{}/add":337, "POST /api/playlist/{}/update":314}
+09:58:33.219287 ERROR[10] load: validation: status-code: POST /api/playlist/01G50D3VHY8RCVQ1641M3Z9N5Q/update : expected([200]) != actual(500)
+09:58:33.219321 SCORE: 40156 (+40266 -110)
+09:58:33.219425 RESULT: score.ScoreTable{"GET /api/playlist/{}":17705, "GET /api/playlists":938, "GET /api/popular_playlists":694, "GET /api/popular_playlists (login)":286, "GET /api/recent_playlists":803, "GET /api/recent_playlists (login)":633, "POST /api/login":523, "POST /api/playlist/favorite":7063, "POST /api/playlist/{}/add":320, "POST /api/playlist/{}/update":303}
 ```
