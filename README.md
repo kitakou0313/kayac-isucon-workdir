@@ -13,3 +13,21 @@
 09:58:33.219321 SCORE: 40156 (+40266 -110)
 09:58:33.219425 RESULT: score.ScoreTable{"GET /api/playlist/{}":17705, "GET /api/playlists":938, "GET /api/popular_playlists":694, "GET /api/popular_playlists (login)":286, "GET /api/recent_playlists":803, "GET /api/recent_playlists (login)":633, "POST /api/login":523, "POST /api/playlist/favorite":7063, "POST /api/playlist/{}/add":320, "POST /api/playlist/{}/update":303}
 ```
+
+## テーブル行数
+```
+mysql> select table_name, table_rows from information_schema.TABLES where table_schema = 'isucon_listen80';
++-------------------+------------+
+| TABLE_NAME        | TABLE_ROWS |
++-------------------+------------+
+| artist            |      30075 |
+| playlist          |     258990 |
+| playlist_favorite |    2884448 |
+| playlist_song     |    9959227 |
+| sessions          |          0 |
+| sessions_golang   |        455 |
+| song              |     346761 |
+| user              |      29922 |
++-------------------+------------+
+8 rows in set (0.02 sec)
+```
