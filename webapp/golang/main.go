@@ -1624,7 +1624,7 @@ func apiPlaylistAddHandler(c echo.Context) error {
 	); err != nil {
 		c.Logger().Errorf(
 			"error Insert playlist by ulid=%s, name=%s, user_account=%s, is_public=%t, created_at=%s, updated_at=%s: %s",
-			playlistULID, name, userAccount, false, createTimestamp, createTimestamp,
+			playlistULID, name, userAccount, false, createTimestamp, createTimestamp, err,
 		)
 		return errorResponse(c, 500, "internal server error")
 	}
