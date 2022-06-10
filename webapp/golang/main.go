@@ -1646,6 +1646,8 @@ func apiPlaylistAddHandler(c echo.Context) error {
 
 // POST /api/playlist/update
 
+// デッドロックしてるっぽいので何とかする
+
 func apiPlaylistUpdateHandler(c echo.Context) error {
 	_, valid, err := validateSession(c)
 	if err != nil {
