@@ -1722,7 +1722,9 @@ func apiPlaylistUpdateHandler(c echo.Context) error {
 
 	updatedTimestamp := time.Now()
 
-	tx, err := conn.BeginTxx(ctx, nil)
+	tx, err := conn.BeginTxx(ctx, &sql.TxOptions{
+		Isolation: sql.LevelReadCommitted,
+	})
 	if err != nil {
 		c.Logger().Errorf("error conn.BeginTxx: %s", err)
 		return errorResponse(c, 500, "internal server error")

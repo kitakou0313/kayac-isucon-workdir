@@ -9,9 +9,9 @@
 
 # CPUコア数の制限がかからないときのスコア Docker desktop windows(Version 4.9.0 (80466))だとdeploy.resources.limits.cpusで2.0に制限してもCPU使用率が200以上になるため制限出来ていなさそう（要調査）
 
-09:58:33.219287 ERROR[10] load: validation: status-code: POST /api/playlist/01G50D3VHY8RCVQ1641M3Z9N5Q/update : expected([200]) != actual(500)
-09:58:33.219321 SCORE: 40156 (+40266 -110)
-09:58:33.219425 RESULT: score.ScoreTable{"GET /api/playlist/{}":17705, "GET /api/playlists":938, "GET /api/popular_playlists":694, "GET /api/popular_playlists (login)":286, "GET /api/recent_playlists":803, "GET /api/recent_playlists (login)":633, "POST /api/login":523, "POST /api/playlist/favorite":7063, "POST /api/playlist/{}/add":320, "POST /api/playlist/{}/update":303}
+15:45:21.421044 ERROR[14] load: timeout: request: timeout: Post "http://localhost/api/login": dial tcp 127.0.0.1:80: i/o timeout
+15:45:21.421097 SCORE: 46781 (+46931 -150)
+15:45:21.421169 RESULT: score.ScoreTable{"GET /api/playlist/{}":21166, "GET /api/playlists":1243, "GET /api/popular_playlists":647, "GET /api/popular_playlists (login)":369, "GET /api/recent_playlists":733, "GET /api/recent_playlists (login)":715, "POST /api/login":613, "POST /api/playlist/favorite":7133, "POST /api/playlist/{}/add":416, "POST /api/playlist/{}/update":414}
 ```
 
 ## テーブル行数
