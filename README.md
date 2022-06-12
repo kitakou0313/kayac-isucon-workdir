@@ -9,9 +9,8 @@
 
 # CPUコア数の制限がかからないときのスコア Docker desktop windows(Version 4.9.0 (80466))だとdeploy.resources.limits.cpusで2.0に制限してもCPU使用率が200以上になるため制限出来ていなさそう（要調査）
 
-15:45:21.421044 ERROR[14] load: timeout: request: timeout: Post "http://localhost/api/login": dial tcp 127.0.0.1:80: i/o timeout
-15:45:21.421097 SCORE: 46781 (+46931 -150)
-15:45:21.421169 RESULT: score.ScoreTable{"GET /api/playlist/{}":21166, "GET /api/playlists":1243, "GET /api/popular_playlists":647, "GET /api/popular_playlists (login)":369, "GET /api/recent_playlists":733, "GET /api/recent_playlists (login)":715, "POST /api/login":613, "POST /api/playlist/favorite":7133, "POST /api/playlist/{}/add":416, "POST /api/playlist/{}/update":414}
+13:29:37.704490 SCORE: 53879 (+53879 0)
+13:29:37.704635 RESULT: score.ScoreTable{"GET /api/playlist/{}":24658, "GET /api/playlists":1346, "GET /api/popular_playlists":818, "GET /api/popular_playlists (login)":435, "GET /api/recent_playlists":879, "GET /api/recent_playlists (login)":817, "POST /api/login":681, "POST /api/playlist/favorite":8123, "POST /api/playlist/{}/add":444, "POST /api/playlist/{}/update":441}
 ```
 
 ## テーブル行数
