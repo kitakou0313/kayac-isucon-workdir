@@ -360,6 +360,7 @@ func getSongByULID(ctx context.Context, db connOrTx, songULID string) (*SongRow,
 }
 
 // N+1改善用
+// キャッシュにする
 func getSongListByULIDs(ctx context.Context, db connOrTx, songULIDs []string) ([]*SongRow, error) {
 	var songRows []*SongRow
 
