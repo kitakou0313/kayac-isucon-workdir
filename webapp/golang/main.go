@@ -364,23 +364,30 @@ func getSongByULID(ctx context.Context, db connOrTx, songULID string) (*SongRow,
 func getSongListByULIDs(ctx context.Context, db connOrTx, songULIDs []string) ([]*SongRow, error) {
 	var songRows []*SongRow
 
-	querySong := "SELECT * FROM song WHERE `ulid` IN (?)"
-	querySong, paramSong, err := sqlx.In(querySong, songULIDs)
-	if err != nil {
-		return nil, fmt.Errorf("error Get song by ulid=%s: %w", songULIDs, err)
-	}
-
-	if err := db.SelectContext(
-		ctx,
-		&songRows,
-		querySong,
-		paramSong...,
-	); err != nil {
-		return nil, fmt.Errorf(
-			"error Select songs with ULIDS : %w",
-			err,
+	for _, ulid := range songULIDs {
+		song, _ := songCacheInstance.Get(
+			ulid,
 		)
+		songRows = append(songRows, song)
 	}
+	// querySong := "SELECT * FROM song WHERE `ulid` IN (?)"
+	// querySong, paramSong, err := sqlx.In(querySong, songULIDs)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("error Get song by ulid=%s: %w", songULIDs, err)
+	// }
+
+	// if err := db.SelectContext(
+	// 	ctx,
+	// 	&songRows,
+	// 	querySong,
+	// 	paramSong...,
+	// ); err != nil {
+	// 	return nil, fmt.Errorf(
+	// 		"error Select songs with ULIDS : %w",
+	// 		err,
+	// 	)
+	// }
+
 	return songRows, nil
 }
 
