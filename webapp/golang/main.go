@@ -2218,6 +2218,19 @@ func initializeHandler(c echo.Context) error {
 		return errorResponse(c, 500, "internal server error")
 	}
 
+	var songRows []*SongRow
+
+	if err := conn.SelectContext(
+		ctx,
+		&songRows,
+		"SELECT * FROM song",
+	); err != nil {
+		c.Logger().Errorf("error: initialize %s", err)
+		return errorResponse(c, 500, "internal server error")
+	}
+
+	songCacheInstance.BulkSet(songRows)
+
 	body := BasicResponse{
 		Result: true,
 		Status: 200,
