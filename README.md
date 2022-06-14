@@ -9,8 +9,8 @@
 
 # CPUコア数の制限がかからないときのスコア Docker desktop windows(Version 4.9.0 (80466))だとdeploy.resources.limits.cpusで2.0に制限してもCPU使用率が200以上になるため制限出来ていなさそう（要調査）
 
-13:29:37.704490 SCORE: 53879 (+53879 0)
-13:29:37.704635 RESULT: score.ScoreTable{"GET /api/playlist/{}":24658, "GET /api/playlists":1346, "GET /api/popular_playlists":818, "GET /api/popular_playlists (login)":435, "GET /api/recent_playlists":879, "GET /api/recent_playlists (login)":817, "POST /api/login":681, "POST /api/playlist/favorite":8123, "POST /api/playlist/{}/add":444, "POST /api/playlist/{}/update":441}
+10:36:35.214504 SCORE: 56033 (+56033 0)
+10:36:35.214590 RESULT: score.ScoreTable{"GET /api/playlist/{}":25966, "GET /api/playlists":1358, "GET /api/popular_playlists":878, "GET /api/popular_playlists (login)":439, "GET /api/recent_playlists":947, "GET /api/recent_playlists (login)":822, "POST /api/login":685, "POST /api/playlist/favorite":8678, "POST /api/playlist/{}/add":451, "POST /api/playlist/{}/update":446}
 ```
 
 ## テーブル行数
