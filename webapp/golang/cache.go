@@ -4,32 +4,33 @@ import "sync"
 
 type songCache struct {
 	sync.RWMutex
-	songs map[int]*SongRow
+	songs map[string]*SongRow
 }
 
 func NewSongCache() *songCache {
 	return &songCache{
-		songs: make(map[int]*SongRow),
+		songs: make(map[string]*SongRow),
 	}
 }
 
-func (sc *songCache) Get(id int) (*SongRow, bool) {
+// ulidからSongRowを返す
+func (sc *songCache) Get(ulid string) (*SongRow, bool) {
 	sc.RLock()
-	songrow, found := sc.songs[id]
+	songrow, found := sc.songs[ulid]
 	sc.RUnlock()
 	return songrow, found
 }
 
 func (sc *songCache) Set(val *SongRow) {
 	sc.Lock()
-	sc.songs[val.ID] = val
+	sc.songs[val.ULID] = val
 	sc.Unlock()
 }
 
 func (sc *songCache) BulkSet(vals []*SongRow) {
 	sc.Lock()
 	for _, row := range vals {
-		sc.songs[row.ID] = row
+		sc.songs[row.ULID] = row
 	}
 	sc.Unlock()
 }
