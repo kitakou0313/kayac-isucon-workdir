@@ -783,28 +783,50 @@ func getCreatedPlaylistSummariesByUserAccount(ctx context.Context, db connOrTx, 
 		return nil, nil
 	}
 
+	playListIdList := make([]int, 0, len(playlists))
+	for _, playlist := range playlists {
+		playListIdList = append(playListIdList, playlist.ID)
+	}
+
+	playlistIdToSongNumMap, err := getListOfSongsCountByPlaylistIDs(ctx, db, playListIdList)
+	if err != nil {
+		return nil, fmt.Errorf("error getListOfSongsCountByPlaylistIDs: %w", err)
+	}
+
+	playlistIdToFavNumMap, err := getMapOfFavoritesCountByPlaylistID(ctx, db, playListIdList)
+	if err != nil {
+		return nil, fmt.Errorf("error getMapOfFavoritesCountByPlaylistID: %w", err)
+	}
+
+	playlistIdToIsFavByUser, err := getMapPlaylistIdToIsFavoritedBy(ctx, db, userAccount, playListIdList)
+	if err != nil {
+		return nil, fmt.Errorf("error getMapPlaylistIdToIsFavoritedBy: %w", err)
+	}
+
+	// N+1
 	results := make([]Playlist, 0, len(playlists))
 	for _, row := range playlists {
-		songCount, err := getSongsCountByPlaylistID(ctx, db, row.ID)
-		if err != nil {
-			return nil, fmt.Errorf("error getSongsCountByPlaylistID: %w", err)
-		}
-		favoriteCount, err := getFavoritesCountByPlaylistID(ctx, db, row.ID)
-		if err != nil {
-			return nil, fmt.Errorf("error getFavoritesCountByPlaylistID: err=%w", err)
-		}
-		isFavorited, err := isFavoritedBy(ctx, db, userAccount, row.ID)
-		if err != nil {
-			return nil, fmt.Errorf("error isFavoritedBy: %w", err)
-		}
+		// songCount, err := getSongsCountByPlaylistID(ctx, db, row.ID)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("error getSongsCountByPlaylistID: %w", err)
+		// }
+		// favoriteCount, err := getFavoritesCountByPlaylistID(ctx, db, row.ID)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("error getFavoritesCountByPlaylistID: err=%w", err)
+		// }
+		// isFavorited, err := isFavoritedBy(ctx, db, userAccount, row.ID)
+		// if err != nil {
+		// 	return nil, fmt.Errorf("error isFavoritedBy: %w", err)
+		// }
+
 		results = append(results, Playlist{
 			ULID:            row.ULID,
 			Name:            row.Name,
 			UserDisplayName: user.DisplayName,
 			UserAccount:     user.Account,
-			SongCount:       songCount,
-			FavoriteCount:   favoriteCount,
-			IsFavorited:     isFavorited,
+			SongCount:       playlistIdToSongNumMap[row.ID],
+			FavoriteCount:   playlistIdToFavNumMap[row.ID],
+			IsFavorited:     playlistIdToIsFavByUser[row.ID],
 			IsPublic:        row.IsPublic,
 			CreatedAt:       row.CreatedAt,
 			UpdatedAt:       row.UpdatedAt,
